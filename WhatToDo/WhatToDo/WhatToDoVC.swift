@@ -12,9 +12,15 @@ class WhatToDoVC: UITableViewController {
 
     var itemArray = ["Eat" , "Sleep" , "FillItYourself" , "Repeat"]
     
+    let defaults = UserDefaults.standard
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
+        if let items = defaults.array(forKey: "ToDoitemsArray") as? [String] {
+            itemArray = items
+        }
+        
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -53,6 +59,7 @@ class WhatToDoVC: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
            
             self.itemArray.append(textfield.text!)
+            self.defaults.set(self.itemArray, forKey: "ToDoitemsArray")
             self.tableView.reloadData()
         }
         
