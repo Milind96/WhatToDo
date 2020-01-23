@@ -42,5 +42,27 @@ class WhatToDoVC: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    
+    
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        
+        var textfield = UITextField()
+        
+        let alert = UIAlertController(title: "Add New Item", message: "What do you have to do??", preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+           
+            self.itemArray.append(textfield.text!)
+            self.tableView.reloadData()
+        }
+        
+        alert.addTextField { (alertTextField) in
+           alertTextField.placeholder = "Enter New Item"
+            textfield = alertTextField
+        }
+        
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+    }
 }
 
