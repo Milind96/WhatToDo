@@ -10,14 +10,30 @@ import UIKit
 
 class WhatToDoVC: UITableViewController {
 
-    var itemArray = ["Eat" , "Sleep" , "FillItYourself" , "Repeat"]
+    var itemArray = [Item]()
     
     let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let items = defaults.array(forKey: "ToDoitemsArray") as? [String] {
+        let newitem = Item()
+        newitem.title = "Eat"
+        itemArray.append(newitem)
+        
+        let newitem2 = Item()
+        newitem2.title = "Sleep"
+        itemArray.append(newitem2)
+        
+        let newitem3 = Item()
+        newitem3.title = "Fill in"
+        itemArray.append(newitem3)
+        
+        let newitem4 = Item()
+        newitem4.title = "Repeat"
+        itemArray.append(newitem4)
+        
+        if let items = defaults.array(forKey: "ToDoitemsArray") as? [Item] {
             itemArray = items
         }
         
@@ -31,7 +47,9 @@ class WhatToDoVC: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
         
-        cell.textLabel?.text = itemArray[indexPath.row]
+        cell.textLabel?.text = itemArray[indexPath.row].title
+        
+        cell.accessoryType = itemArray[indexPath.row].done == true ? .checkmark : .none
         
         return cell
     }
@@ -39,11 +57,9 @@ class WhatToDoVC: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //print(itemArray[indexPath.row])
         
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-           tableView.cellForRow(at: indexPath)?.accessoryType = .none
-        } else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        }
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+        
+        tableView.reloadData()
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -58,7 +74,10 @@ class WhatToDoVC: UITableViewController {
         
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
            
-            self.itemArray.append(textfield.text!)
+            let newitem = Item()
+            newitem.title = textfield.text!
+            
+            self.itemArray.append(newitem)
             self.defaults.set(self.itemArray, forKey: "ToDoitemsArray")
             self.tableView.reloadData()
         }
